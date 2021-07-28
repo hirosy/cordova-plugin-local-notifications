@@ -130,6 +130,10 @@ public class LocalNotification extends CordovaPlugin {
 
         cordova.getThreadPool().execute(new Runnable() {
             public void run() {
+                // 追加
+                if (action.equals("removeDefaultChannel")) {
+                    removeDefaultChannel(command);
+                } else
                 if (action.equals("ready")) {
                     deviceready();
                 } else
@@ -202,7 +206,19 @@ public class LocalNotification extends CordovaPlugin {
 
         launchDetails = null;
     }
-
+    /**
+    * Remove Default channel.
+    */
+    private void removeDefaultChannel(CallbackContext command) {
+        boolean res = getNotMgr().removeDefaultChannel();
+        String msg = "OK";
+        if (res) {
+            fireEvent("removedefaultchannel");
+        } else {
+            msg = "NG";
+        }
+        command.success(msg);
+    }
     /**
      * Ask if user has enabled permission for local notifications.
      *

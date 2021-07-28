@@ -106,13 +106,31 @@ public final class Manager {
      */
     public Notification schedule (Request request, Class<?> receiver) {
         Options options    = request.getOptions();
+        // 追加
+        if (SDK_INT >= O) {
+            this.createChannel(options);
+        }
+    
         Notification toast = new Notification(context, options);
 
         toast.schedule(request, receiver);
 
         return toast;
     }
-
+    /**
+    * Remove default channel.
+    */
+    public boolean removeDefaultChannel() {
+        boolean res = false;
+        if (SDK_INT >= O) {
+            NotificationChannel channel = getNotMgr().getNotificationChannel(DEFAULT_CHANNEL_ID);
+            if (channel != null) {
+                getNotMgr().deleteNotificationChannel(DEFAULT_CHANNEL_ID);
+                res = true;
+            }
+        }
+        return res;
+    }
     /**
      * TODO: temporary
      */
